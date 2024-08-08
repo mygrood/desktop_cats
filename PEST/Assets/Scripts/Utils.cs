@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Utils : MonoBehaviour
 {
-    // Get Mouse Position in World with Z = 0f
+    
     public static Vector3 GetMouseWorldPosition()
     {
         Vector3 vec = GetMouseWorldPositionWithZ(Input.mousePosition, Camera.main);

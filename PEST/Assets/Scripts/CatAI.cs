@@ -9,8 +9,8 @@ public class CatAI : MonoBehaviour
     public float runSpeed = 3f;
     public float changeDirectionTime = 5f;
     public float activity = 20f;
-    public float actionInterval = 10f; // Интервал между случайными действиями
-    private float actionTimer;
+    public float actionInterval = 10f; // интервал между случайными действиями
+    private float actionTimer=0;
 
     private Animator animator;
     private Rigidbody2D rb;
@@ -20,7 +20,7 @@ public class CatAI : MonoBehaviour
     private bool isActionActive = false;
     private float speed;
 
-    private bool isDragging = false; // Флаг для отслеживания состояния перетаскивания
+    private bool isDragging = false; 
     private Vector3 dragOffset;
 
     public Dictionary<string, float> actionProbabilities = new Dictionary<string, float>
@@ -41,7 +41,7 @@ public class CatAI : MonoBehaviour
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        actionTimer = actionInterval;        
+        //actionTimer = actionInterval;        
     }
 
 
@@ -56,7 +56,7 @@ public class CatAI : MonoBehaviour
             animator.SetBool("isActionActive", false);
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = new Vector3(mousePosition.x - dragOffset.x, mousePosition.y - dragOffset.y, transform.position.z);
-            return; // Прекращаем выполнение Update, если идет перетаскивание
+            return; 
         }
 
         actionTimer -= Time.deltaTime;
@@ -65,23 +65,23 @@ public class CatAI : MonoBehaviour
         {
             actionTimer = actionInterval;
 
-            if (!isActionActive) // Проверка, что текущее действие не активно
+            if (!isActionActive) 
             {
-                if (Random.Range(0, 100) < activity) // Проверка активности для выбора действия или движения
+                if (Random.Range(0, 100) < activity) 
                 {
-                    HandleMovement(); // Выполнение движения
+                    HandleMovement(); 
                 }
                 else
                 {
-                    StartCoroutine(HandleActions()); // Выполнение действия
+                    StartCoroutine(HandleActions()); 
                 }
             }
         }
 
         if (!isActionActive) // Если действие не активно
         {
-            animator.SetFloat("speed", speed); // Установка скорости в аниматор
-            rb.velocity = new Vector2(direction * speed, rb.velocity.y); // Установка скорости движения
+            animator.SetFloat("speed", speed); 
+            rb.velocity = new Vector2(direction * speed, rb.velocity.y); 
         }
         else
         {
@@ -94,9 +94,9 @@ public class CatAI : MonoBehaviour
     private void HandleMovement()
     {
 
-        direction = Random.Range(0, 2) == 0 ? -1 : 1; // Случайное изменение направления
-        speed = Random.Range(walkSpeed, runSpeed); // Случайный выбор скорости (ходьба или бег)
-        sprite.flipX = direction < 0; // Отражение спрайта в зависимости от направления
+        direction = Random.Range(0, 2) == 0 ? -1 : 1; 
+        speed = Random.Range(walkSpeed, runSpeed); 
+        sprite.flipX = direction < 0; 
         animator.SetFloat("speed", speed);
     }
 
