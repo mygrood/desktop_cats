@@ -43,9 +43,11 @@ public class TransparentWindow : MonoBehaviour
     const uint LWA_COLORKEY = 0x00000001;
 
     private IntPtr hWnd;
+    private int transparentLayer;
 
     private void Start()
-    {       
+    {
+        transparentLayer = LayerMask.NameToLayer("Transparent");
 
 #if !UNITY_EDITOR
         hWnd = GetActiveWindow();
@@ -63,7 +65,11 @@ public class TransparentWindow : MonoBehaviour
     }
     private void Update()
     {
-        SetClickthrough(Physics2D.OverlapPoint(Utils.GetMouseWorldPosition()) == null);
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        bool isMouseOverTransparentObject = Physics2D.OverlapPoint(mousePosition, 1 << transparentLayer) != null;
+        bool isMouseOverAnyObject = Physics2D.OverlapPoint(mousePosition) != null;
+
+        SetClickthrough(isMouseOverTransparentObject || !isMouseOverAnyObject);
     }
 
     private void SetClickthrough(bool clickthrough)
